@@ -7,6 +7,7 @@ export const aiChatMessage = z.object({
 })
 
 export const aiChat = z.object({
+  id: z.string().optional(),
   messages: z.array(aiChatMessage),
 })
 

@@ -1,9 +1,9 @@
 import lodash from 'lodash'
 import { Environment } from '../../environment'
-import { v4 as uuidv4 } from 'uuid'
+import { v4 as uuid } from 'uuid'
 
 export function log(req: any, res: any, next: any) {
-  req.id = uuidv4()
+  req.id = uuid()
   const startTime = Date.now()
 
   if (Environment.server.node_env !== 'test' && req.path !== '/health-check') {

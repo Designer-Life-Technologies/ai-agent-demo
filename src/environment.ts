@@ -14,5 +14,6 @@ export const Environment: Environment = {
     node_env: process.env.NODE_ENV || 'development',
     port: process.env.SERVER_PORT || 3001,
     no_db_exit: process.env.NO_DB_EXIT || 'false', // Exit process when not connected to DB
+    status: process.env.STATUS || 'OK',
   },
 }
