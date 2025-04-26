@@ -19,8 +19,10 @@ coverage
 .pnp.*
 
 # Environment files
+# Only .env.example should be committed
 .env
 .env.dev
+.env.test
 
 
 
