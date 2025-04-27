@@ -1,17 +1,14 @@
 /**
  * Defines the LangGraph graph for a simple chat
  */
-import {
-  END,
-  MemorySaver,
-  START,
-  StateGraph,
-  MessagesAnnotation,
-} from '@langchain/langgraph'
+import { START, StateGraph, MessagesAnnotation } from '@langchain/langgraph'
 import { ChatPromptTemplate } from '@langchain/core/prompts'
+import { ToolNode, toolsCondition } from '@langchain/langgraph/prebuilt'
+
 // import { ChatOpenAI } from '@langchain/openai'
 import { ChatXAI } from '@langchain/xai'
 // import { ChatAnthropic } from '@langchain/anthropic'
+import { addTool, divideTool, multiplyTool, subtractTool } from './tools'
 
 // Create LLM Instance
 // const llm = new ChatOpenAI({
@@ -31,34 +28,52 @@ const llm = new ChatXAI({
 export const prompt = ChatPromptTemplate.fromMessages([
   [
     'system',
-    'You talk like a pirate. Answer all questions to the best of your ability.',
+    'You are an assistant tasked with performing arithmetic operations. Use normal mathematical order or operations and do not request confirmation.',
   ],
-  ['user', '{user_input}'],
+  ['human', '{user_input}'],
 ])
 
-// Define model call node to take the current state
-// and invoke the LLM instance
-// MessageAnnotation provides a shortcut that appends the messages to the state
-export async function callModel(
+// Define LLM call node to determine which tool to use (if any)
+// The LLM will consider the tools that is available and make a decision
+// on which tool to use (if any).
+// The tool call will be added to the state and passed to the next node.
+// If no tool is selected, the LLM will respond with a normal ai message.
+async function whichToolToUse(
   state: typeof MessagesAnnotation.State,
 ): Promise<typeof MessagesAnnotation.State> {
-  const response = await llm.invoke(state.messages)
-  // Append the messages to the state
-  // This is a shortcut provided by the MessagesAnnotation
+  // Bind tools to LLM
+  // This tells the LLM about the tools and allows it to decide
+  // whether it should make a tool call or not.
+  const llmWithTools = llm.bindTools([
+    addTool,
+    subtractTool,
+    multiplyTool,
+    divideTool,
+  ])
+  const response = await llmWithTools.invoke(state.messages)
   return { messages: [response] }
 }
+
+// Define the tool node
+// This node will invoke the tool that is requested in the state
+// message that is passed to it and return the result.
+const toolsNode = new ToolNode([
+  addTool,
+  subtractTool,
+  multiplyTool,
+  divideTool,
+])
 
 // Define graph flow
 const builder = new StateGraph(MessagesAnnotation)
   // Add nodes
-  .addNode('callModel', callModel)
+  .addNode('whichToolToUse', whichToolToUse)
+  .addNode('tools', toolsNode)
 
   // Add edges
-  .addEdge(START, 'callModel')
-  .addEdge('callModel', END)
-
-// Add Memory Persistence
-const memory = new MemorySaver()
+  .addEdge(START, 'whichToolToUse')
+  .addConditionalEdges('whichToolToUse', toolsCondition)
+  .addEdge('tools', 'whichToolToUse') // If another tool call is required, send it back to the tools
 
 // Compile and export Grapg object
-export const graph = builder.compile({ checkpointer: memory })
+export const graph = builder.compile()

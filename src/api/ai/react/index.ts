@@ -1,9 +1,9 @@
 import { RequestHandler, Router } from 'express'
-import { simpleChat } from '../../../ai/simple-chat/simple-chat'
-import { aiChat, AIChatMessageType } from '../../../types/aiChat'
+import { reAct } from '../../../ai/reason-act/re-act'
+import { aiChat } from '../../../types/aiChat'
 import { v4 as uuid } from 'uuid'
 
-const chat: RequestHandler = async (req, res): Promise<any> => {
+const chat: RequestHandler = async (req, res): Promise<void> => {
   // Parse the request body into an AIChat object
   // Using parse will throw an error if the request body is invalid
   // This is handled by the zodError middleware
@@ -15,7 +15,7 @@ const chat: RequestHandler = async (req, res): Promise<any> => {
   }
 
   // Invoke the simple chat function
-  const result = await simpleChat(chat)
+  const result = await reAct(chat)
   res.json(result)
 }
 

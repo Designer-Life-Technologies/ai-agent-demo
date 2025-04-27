@@ -3,12 +3,9 @@ import { type AIChat } from '../../types/aiChat'
 import { lagnchainMessageToAIChatMessage } from '../../api/utils/messages'
 
 /**
- * Handles a simple chat with memory.
- *
+ * Handles a simple chat request with memory.
  * If thread_id is specified, it will be used and the message history
  * will be passed to the LLM.
- *
- * If thread_id is not specified, a new thread will be created.
  *
  * This will cause excessive token usage since the message history will be passed
  * to the LLM. See summary-chat where the LLM is used to summarise the

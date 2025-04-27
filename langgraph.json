@@ -3,7 +3,8 @@
   "dockerfile_lines": [],
   "dependencies": ["."],
   "graphs": {
-    "simple_chat": "./src/ai/simple-chat/graph.ts:graph"
+    "simple_chat": "./src/ai/simple-chat/graph.ts:graph",
+    "reason_act": "./src/ai/reason-act/graph.ts:graph"
   },
   "env": ".env.dev"
 }
