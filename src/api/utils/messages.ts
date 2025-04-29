@@ -33,3 +33,11 @@ export function lagnchainMessageToAIChatMessage(
   }
   return outMessage
 }
+
+export function setStreamingHeaders(res: any) {
+  // Set response buffers
+  res.setHeader('Content-Type', 'application/json')
+  res.setHeader('Cache-Control', 'no-cache')
+  res.setHeader('Connection', 'keep-alive')
+  res.setHeader('X-Accel-Buffering', 'no') // Disable Nginx buffering if using Nginx
+}

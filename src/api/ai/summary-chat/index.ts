@@ -1,7 +1,7 @@
 import { RequestHandler, Router } from 'express'
-import { simpleChat } from '../../../ai/simple-chat/simple-chat'
 import { aiChat } from '../../../types/aiChat'
 import { v4 as uuid } from 'uuid'
+import { summaryChat } from '../../../ai/summary-chat/summary-chat'
 
 const chat: RequestHandler = async (req, res): Promise<any> => {
   // Parse the request body into an AIChat object
@@ -14,12 +14,12 @@ const chat: RequestHandler = async (req, res): Promise<any> => {
     chat.thread_id = uuid()
   }
 
-  // Invoke the simple chat function
-  const result = await simpleChat(chat)
+  // Invoke the summary chat function
+  const result = await summaryChat(chat)
   res.json(result)
 }
 
-// Route Definition: /ai/simple-chat
+// Route Definition: /ai/summary-chat
 const router = Router()
 
 router.post('/', chat)

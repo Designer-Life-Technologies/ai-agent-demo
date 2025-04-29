@@ -39,9 +39,27 @@ export async function reAct(chat: AIChat): Promise<AIChat> {
   })
 
   chat.messages = result.messages.map((message) => {
-    console.log(message)
     return lagnchainMessageToAIChatMessage(message)
   })
 
   return chat
+}
+
+export async function streamingReAct(chat: AIChat): Promise<void> {
+  // Get the prompt from the prompt template
+  const messages = await prompt.invoke({
+    // Pass the request from the first message in the chat as user_input
+    user_input: chat.messages[0]!.content,
+  })
+
+  const eventStream = await graph.streamEvents(messages, {
+    configurable: { thread_id: chat.thread_id! },
+    version: 'v2',
+  })
+
+  for await (const { event, name, metadata } of eventStream) {
+    console.log(
+      `Node: ${metadata?.langgraph_node ? metadata?.langgraph_node : ''} Event: ${event}: Name: ${name}`,
+    )
+  }
 }

@@ -4,7 +4,8 @@
   "dependencies": ["."],
   "graphs": {
     "simple_chat": "./src/ai/simple-chat/graph.ts:graph",
-    "reason_act": "./src/ai/reason-act/graph.ts:graph"
+    "reason_act": "./src/ai/reason-act/graph.ts:graph",
+    "summary_chat": "./src/ai/summary-chat/graph.ts:graph"
   },
   "env": ".env.dev"
 }

@@ -7,10 +7,16 @@ import {
   START,
   StateGraph,
   MessagesAnnotation,
+  Annotation,
 } from '@langchain/langgraph'
-import { ChatPromptTemplate } from '@langchain/core/prompts'
 // import { ChatOpenAI } from '@langchain/openai'
 import { ChatXAI } from '@langchain/xai'
+import {
+  HumanMessage,
+  RemoveMessage,
+  SystemMessage,
+} from '@langchain/core/messages'
+import { v4 as uuidv4 } from 'uuid'
 // import { ChatAnthropic } from '@langchain/anthropic'
 
 // Create LLM Instance
@@ -27,35 +33,107 @@ const llm = new ChatXAI({
 //   temperature: 0,
 // })
 
-// Define prompt template (optional)
-export const prompt = ChatPromptTemplate.fromMessages([
-  [
-    'system',
-    'You talk like a pirate. Answer all questions to the best of your ability.',
-  ],
-  ['user', '{user_input}'],
-])
+// Define Custom State
+// Customise the state by adding a `summary` attribute (in addition to `messages` key,
+// which MessagesAnnotation already has)
+const GraphAnnotation = Annotation.Root({
+  ...MessagesAnnotation.spec, // inherit messages key
 
-// Define model call node to take the current state
-// and invoke the LLM instance
-// MessageAnnotation provides a shortcut that appends the messages to the state
+  // add summary key to the state
+  summary: Annotation<string>({
+    reducer: (_, action) => action,
+    default: () => '',
+  }),
+})
+
+// Define Model Call Node
 async function callModel(
-  state: typeof MessagesAnnotation.State,
-): Promise<typeof MessagesAnnotation.State> {
-  const response = await llm.invoke(state.messages)
-  // Append the messages to the state
-  // This is a shortcut provided by the MessagesAnnotation
+  state: typeof GraphAnnotation.State,
+): Promise<Partial<typeof GraphAnnotation.State>> {
+  // If a summary exists, we add this in as a system message
+  const { summary } = state
+  let { messages } = state
+  if (summary) {
+    const systemMessage = new SystemMessage({
+      id: uuidv4(),
+      content: `Summary of conversation earlier: ${summary}`,
+    })
+    messages = [systemMessage, ...messages]
+  }
+  const response = await llm.invoke(messages)
+  // We return an object, because this will get added to the existing state
   return { messages: [response] }
 }
 
-// Define graph flow
-const builder = new StateGraph(MessagesAnnotation)
-  // Add nodes
-  .addNode('callModel', callModel)
+// Define conditional node to determine whether to end or summarize the conversation
+function shouldSummarize(
+  state: typeof GraphAnnotation.State,
+): 'summarize_conversation' | typeof END {
+  const messages = state.messages
+  // If there are more than six messages, then we summarize the conversation
+  if (messages.length > 6) {
+    return 'summarize_conversation'
+  }
+  // Otherwise we can just end
+  return END
+}
 
-  // Add edges
-  .addEdge(START, 'callModel')
-  .addEdge('callModel', END)
+// Define Summarize Conversation Node
+async function summarizeConversation(
+  state: typeof GraphAnnotation.State,
+): Promise<Partial<typeof GraphAnnotation.State>> {
+  // First, we summarize the conversation
+  const { summary, messages } = state
+  let summaryMessage: string
+  if (summary) {
+    // If a summary already exists, we use a different system prompt
+    // to summarize it than if one didn't
+    summaryMessage =
+      `This is summary of the conversation to date: ${summary}\n\n` +
+      'Extend the summary by taking into account the new messages above:'
+  } else {
+    summaryMessage = 'Create a summary of the conversation above:'
+  }
+
+  // Add summary message to the existing messages
+  const allMessages = [
+    ...messages,
+    new HumanMessage({
+      id: uuidv4(),
+      content: summaryMessage,
+    }),
+  ]
+
+  // Call the LLM to create the summary
+  const response = await llm.invoke(allMessages)
+
+  // Delete messages that we no longer want to show up
+  // Delete all but the last two
+  const deleteMessages = messages
+    .slice(0, -2) // Pick all but the last two
+    .map((m) => new RemoveMessage({ id: m.id! }))
+  if (typeof response.content !== 'string') {
+    throw new Error('Expected a string response from the model')
+  }
+
+  // Add the summary to the state, remove all but last two messages
+  return { summary: response.content, messages: deleteMessages }
+}
+
+// Define graph FLOW
+const builder = new StateGraph(GraphAnnotation)
+  // Define the conversation node and the summarize node
+  .addNode('conversation', callModel)
+  .addNode('summarize_conversation', summarizeConversation)
+
+  // Set the entrypoint as conversation
+  .addEdge(START, 'conversation')
+  // We now add a conditional edge to check if we need to summarize the conversation
+  // shouldSummarize will return END or 'summarize_conversation'
+  .addConditionalEdges('conversation', shouldSummarize)
+  // We now add a normal edge from `summarize_conversation` to END.
+  // This means that after `summarize_conversation` is called, we end.
+  .addEdge('summarize_conversation', END)
 
 // Add Memory Persistence
 const memory = new MemorySaver()
