@@ -21,7 +21,7 @@ export async function summaryChat(chat: AIChat): Promise<AIChat> {
       configurable: { thread_id: chat.thread_id! },
     },
   )
-  console.log(result)
+
   chat.messages = result.messages.map((message) =>
     lagnchainMessageToAIChatMessage(message),
   )
