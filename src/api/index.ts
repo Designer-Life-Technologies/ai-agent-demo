@@ -8,7 +8,7 @@ import helmet from 'helmet'
 import { Environment } from '../environment'
 
 import ai from './ai'
-import { log } from './middleware/log'
+// import { log } from './middleware/log'
 import { error } from './middleware/error'
 import { zodError } from './middleware/zod-error'
 
@@ -39,7 +39,7 @@ api.use(helmet())
 api.use(express.json())
 api.use(express.urlencoded({ extended: true }))
 
-api.use(log)
+// api.use(log)
 
 api.use(router)
 

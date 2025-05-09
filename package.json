@@ -7,7 +7,10 @@
     "start": "node -r dotenv/config dist",
     "start:dev": "env-cmd -f ./.env.dev nodemon dist",
     "test": "env-cmd -f ./.env.test jest",
-    "langgraph": "npx @langchain/langgraph-cli@latest dev"
+    "langgraph": "npx @langchain/langgraph-cli@latest dev",
+    "hil": "env-cmd -f ./.env.dev node dist/ai/human-in-the-loop/run.js",
+    "search-web": "env-cmd -f ./.env.dev node dist/ai/search-web/search-web.js",
+    "research-assistant": "env-cmd -f ./.env.dev node dist/ai/research-assistant/research-assistant.js"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",
@@ -27,9 +30,11 @@
   },
   "dependencies": {
     "@langchain/anthropic": "^0.3.19",
+    "@langchain/community": "^0.3.42",
     "@langchain/core": "^0.3.46",
     "@langchain/langgraph": "^0.2.65",
     "@langchain/openai": "^0.5.6",
+    "@langchain/tavily": "^0.1.1",
     "@langchain/xai": "^0.0.2",
     "cors": "^2.8.5",
     "dotenv": "^16.5.0",

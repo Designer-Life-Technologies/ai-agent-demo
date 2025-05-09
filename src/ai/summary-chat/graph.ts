@@ -41,7 +41,7 @@ const GraphAnnotation = Annotation.Root({
 
   // add summary key to the state
   summary: Annotation<string>({
-    reducer: (_, action) => action,
+    reducer: (_, action) => action, // replace previous summary with new one
     default: () => '',
   }),
 })

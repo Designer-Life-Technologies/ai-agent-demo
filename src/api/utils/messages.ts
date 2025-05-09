@@ -34,6 +34,24 @@ export function lagnchainMessageToAIChatMessage(
   return outMessage
 }
 
+export function prettyPrint(message: any) {
+  if (
+    message.getType() === 'ai' &&
+    message.tool_calls &&
+    message.tool_calls.length > 0
+  ) {
+    console.log(
+      `================================ ai tool calls =================================`,
+    )
+    console.dir(message.tool_calls, { depth: null })
+  } else {
+    console.log(
+      `================================ ${message.getType()} =================================`,
+    )
+    console.dir(lagnchainMessageToAIChatMessage(message), { depth: null })
+  }
+}
+
 export function setStreamingHeaders(res: any) {
   // Set response buffers
   res.setHeader('Content-Type', 'application/json')

@@ -5,7 +5,13 @@
   "graphs": {
     "simple_chat": "./src/ai/simple-chat/graph.ts:graph",
     "reason_act": "./src/ai/reason-act/graph.ts:graph",
-    "summary_chat": "./src/ai/summary-chat/graph.ts:graph"
+    "summary_chat": "./src/ai/summary-chat/graph.ts:graph",
+    "human-in-the-loop": "./src/ai/human-in-the-loop/graph.ts:graph",
+    "search-web": "./src/ai/search-web/graph.ts:graph",
+    "generate-jokes": "./src/ai/generate-jokes/graph.ts:graph",
+    "create-analyst": "./src/ai/research-assistant/create-analysts.ts:createAnalystsGraph",
+    "interview": "./src/ai/research-assistant/interview.ts:interviewGraph",
+    "research-assistant": "./src/ai/research-assistant/graph.ts:researchAssistantGraph"
   },
   "env": ".env.dev"
 }
