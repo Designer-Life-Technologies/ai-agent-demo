@@ -11,7 +11,8 @@
     "generate-jokes": "./src/ai/generate-jokes/graph.ts:graph",
     "create-analyst": "./src/ai/research-assistant/create-analysts.ts:createAnalystsGraph",
     "interview": "./src/ai/research-assistant/interview.ts:interviewGraph",
-    "research-assistant": "./src/ai/research-assistant/graph.ts:researchAssistantGraph"
+    "research-assistant": "./src/ai/research-assistant/graph.ts:researchAssistantGraph",
+    "task-maistro": "./src/ai/task-maistro/graph.ts:taskMAIstroGraph"
   },
   "env": ".env.dev"
 }
