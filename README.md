@@ -1,5 +1,8 @@
 # ai-agent-demo
 
+![Status](https://img.shields.io/badge/status-active-brightgreen)
+![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
+
 A TypeScript-based AI Agent demo project using LangChain, LangGraph, and multiple LLM providers. This project demonstrates modular agent architectures, memory, and prompt engineering with a focus on composability and modern AI best practices.
 
 ---
@@ -53,6 +56,12 @@ cp .env.example .env.dev
 # Edit .env.dev to add your keys for OpenAI, Anthropic, XAI, etc.
 ```
 
+**Required environment variables:**
+- `OPENAI_API_KEY`
+- `ANTHROPIC_API_KEY`
+- `XAI_API_KEY`
+- (Add any other keys as needed by your agents)
+
 ### 4. Build the Project
 
 ```bash
@@ -79,6 +88,26 @@ npm run langgraph
 - Extend with new agents/graphs in `src/ai/`.
 - See `src/ai/simple-chat/graph.ts` for graph construction and prompt examples.
 
+### Example API Request
+
+```
+POST /api/ai/simple-chat
+Content-Type: application/json
+
+{
+  "messages": [
+    { "role": "user", "content": "Hello!" }
+  ]
+}
+```
+
+**Sample response:**
+```
+{
+  "reply": "Hi! How can I assist you today?"
+}
+```
+
 ## Scripts
 
 | Command             | Description                      |
@@ -99,6 +128,14 @@ npm run langgraph
 - [Express](https://expressjs.com/)
 - [Zod](https://zod.dev/)
 - [dotenv](https://www.npmjs.com/package/dotenv)
+
+## Contributing
+
+Contributions are welcome! To contribute:
+- Fork the repository
+- Create a new branch for your feature or bugfix
+- Open a pull request with a clear description of your changes
+- For major changes, please open an issue first to discuss your proposal
 
 ## License
 
