@@ -19,7 +19,7 @@ export async function taskMaistro(chat: AIChat): Promise<any> {
       },
     },
   )) {
-    // console.dir(event, { depth: null })
+    console.dir(event, { depth: null })
   }
 
   return chat

@@ -12,7 +12,8 @@
     "create-analyst": "./src/ai/research-assistant/create-analysts.ts:createAnalystsGraph",
     "interview": "./src/ai/research-assistant/interview.ts:interviewGraph",
     "research-assistant": "./src/ai/research-assistant/graph.ts:researchAssistantGraph",
-    "task-maistro": "./src/ai/task-maistro/graph.ts:taskMAIstroGraph"
+    "task-maistro": "./src/ai/task-maistro/graph.ts:taskMAIstroGraph",
+    "rag": "./src/ai/rag/graph.ts:graph"
   },
   "env": ".env.dev"
 }

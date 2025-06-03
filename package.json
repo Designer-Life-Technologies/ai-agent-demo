@@ -11,7 +11,8 @@
     "hil": "env-cmd -f ./.env.dev node dist/ai/human-in-the-loop/run.js",
     "search-web": "env-cmd -f ./.env.dev node dist/ai/search-web/search-web.js",
     "research-assistant": "env-cmd -f ./.env.dev node dist/ai/research-assistant/research-assistant.js",
-    "task-maistro": "env-cmd -f ./.env.dev node dist/ai/task-maistro/task-maistro.js"
+    "task-maistro": "env-cmd -f ./.env.dev node dist/ai/task-maistro/task-maistro.js",
+    "embeddings": "env-cmd -f ./.env.dev node dist/ai/rag/embedding.js"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",
@@ -31,12 +32,15 @@
   },
   "dependencies": {
     "@langchain/anthropic": "^0.3.19",
-    "@langchain/community": "^0.3.42",
+    "@langchain/community": "^0.3.45",
     "@langchain/core": "^0.3.46",
     "@langchain/langgraph": "^0.2.65",
     "@langchain/openai": "^0.5.6",
     "@langchain/tavily": "^0.1.1",
     "@langchain/xai": "^0.0.2",
+    "@zilliz/milvus2-sdk-node": "^2.5.9",
+    "cheerio": "^1.0.0",
+    "chromadb": "^2.4.6",
     "cors": "^2.8.5",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",

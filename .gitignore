@@ -28,3 +28,6 @@ coverage
 
 # LangGraph API
 .langgraph_api
+
+# Milvus Data
+volumes
