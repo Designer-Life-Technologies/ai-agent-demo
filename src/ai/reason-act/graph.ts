@@ -5,20 +5,20 @@ import { START, StateGraph, MessagesAnnotation } from '@langchain/langgraph'
 import { ChatPromptTemplate } from '@langchain/core/prompts'
 import { ToolNode, toolsCondition } from '@langchain/langgraph/prebuilt'
 
-// import { ChatOpenAI } from '@langchain/openai'
-import { ChatXAI } from '@langchain/xai'
+import { ChatOpenAI } from '@langchain/openai'
+// import { ChatXAI } from '@langchain/xai'
 // import { ChatAnthropic } from '@langchain/anthropic'
 import { addTool, divideTool, multiplyTool, subtractTool } from './tools'
 
 // Create LLM Instance
-// const llm = new ChatOpenAI({
-//   model: 'gpt-4o-mini',
-//   temperature: 0,
-// })
-const llm = new ChatXAI({
-  model: 'grok-beta',
+const llm = new ChatOpenAI({
+  model: 'gpt-4o-mini',
   temperature: 0,
 })
+// const llm = new ChatXAI({
+//   model: 'grok-beta',
+//   temperature: 0,
+// })
 // const llm = new ChatAnthropic({
 //   model: 'claude-3-5-sonnet-20240620',
 //   temperature: 0,
