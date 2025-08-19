@@ -41,6 +41,7 @@ export const aiChatMessage = z
 
 export const aiChat = z
   .object({
+    userId: z.string().optional(),
     thread_id: z.string().optional(),
     messages: z.array(aiChatMessage),
   })

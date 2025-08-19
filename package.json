@@ -12,7 +12,8 @@
     "search-web": "env-cmd -f ./.env.dev node dist/ai/search-web/search-web.js",
     "research-assistant": "env-cmd -f ./.env.dev node dist/ai/research-assistant/research-assistant.js",
     "task-maistro": "env-cmd -f ./.env.dev node dist/ai/task-maistro/task-maistro.js",
-    "embeddings": "env-cmd -f ./.env.dev node dist/ai/rag/embedding.js"
+    "embeddings": "env-cmd -f ./.env.dev node dist/ai/rag/embedding.js",
+    "memory-questionaire": "env-cmd -f ./.env.dev node dist/ai/memory-questionaire/run.js"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",
@@ -38,6 +39,7 @@
     "@langchain/openai": "^0.5.6",
     "@langchain/tavily": "^0.1.1",
     "@langchain/xai": "^0.0.2",
+    "@types/pg": "^8.15.5",
     "@zilliz/milvus2-sdk-node": "^2.5.9",
     "cheerio": "^1.0.0",
     "chromadb": "^2.4.6",
@@ -47,6 +49,7 @@
     "helmet": "^8.1.0",
     "jest": "^29.7.0",
     "lodash": "^4.17.21",
+    "pg": "^8.16.3",
     "uuid": "^11.1.0",
     "zod": "^3.24.3"
   },
